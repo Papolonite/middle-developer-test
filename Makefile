@@ -1,8 +1,11 @@
-migration_up: 
-	migrate -path platform/migrations/ -database "postgresql://dev:dev@localhost:5102/postgres?sslmode=disable" -verbose up
- 
-migration_down: 
-	migrate -path platform/migrations/ -database "postgresql://dev:dev@localhost:5102/postgres?sslmode=disable" -verbose down
+MIGRATION_PATH = $(PWD)/platform/migrations
+DATABASE_URL = postgresql://dev:dev@localhost:5102/postgres?sslmode=disable
 
-migration_fix: 
-	migrate -path platform/migrations/ -database "postgresql://dev:dev@localhost:5102/postgres?sslmode=disable" force VERSION
+migrate.up: 
+	migrate -path ${MIGRATION_PATH} -database "${DATABASE_URL}" -verbose up
+ 
+migrate.down: 
+	migrate -path ${MIGRATION_PATH} -database "${DATABASE_URL}" -verbose down
+
+migrate.fix: 
+	migrate -path ${MIGRATION_PATH} -database "${DATABASE_URL}" force ${VERSION}

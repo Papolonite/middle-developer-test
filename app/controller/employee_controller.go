@@ -65,7 +65,7 @@ func GetAllEmployee(c *fiber.Ctx) error {
 
 	return c.JSON(fiber.Map{
 		"message": "Successfully fetch all employee data",
-		"data": employeeList,
+		"data":    employeeList,
 	})
 }
 
@@ -96,7 +96,7 @@ func GetEmployeeById(c *fiber.Ctx) error {
 
 	return c.JSON(fiber.Map{
 		"message": "Successfully fetched employee data",
-		"data": employee
+		"data":    employee,
 	})
 }
 
@@ -135,7 +135,7 @@ func UpdateEmployeeById(c *fiber.Ctx) error {
 			})
 	}
 
-	db, err := database.PostgreSQLConection()
+	db, err = database.PostgreSQLConection()
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(
 			fiber.Map{
@@ -151,15 +151,17 @@ func UpdateEmployeeById(c *fiber.Ctx) error {
 			})
 	}
 
-
 	// Update Employee
-	if employeeBody.FirstName == nil {
+	if employeeBody.FirstName == "" {
 		employeeBody.FirstName = employee.FirstName
-	} if employeeBody.LastName == nil {
+	}
+	if employeeBody.LastName == "" {
 		employeeBody.LastName = employee.LastName
-	} if employeeBody.Email == nil {
+	}
+	if employeeBody.Email == "" {
 		employeeBody.Email = employee.Email
-	} if employeeBody.HireDate == nil {
+	}
+	if employeeBody.HireDate.IsZero() {
 		employeeBody.HireDate = employee.HireDate
 	}
 
@@ -184,6 +186,7 @@ func DeleteEmployee(c *fiber.Ctx) error {
 			})
 	}
 
+	// Check Employee Exist
 	db, err := database.PostgreSQLConection()
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(
@@ -200,7 +203,8 @@ func DeleteEmployee(c *fiber.Ctx) error {
 			})
 	}
 
-	err := db.DeleteEmployeeById(id)
+	// Delete Employee
+	err = db.DeleteEmployeeById(id)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(
 			fiber.Map{
@@ -209,7 +213,6 @@ func DeleteEmployee(c *fiber.Ctx) error {
 	}
 
 	return c.JSON(fiber.Map{
-		"message": "Successfully deleted employee data",
-		"data": employee
+		"message": "Successfully deleted employee data"
 	})
 }

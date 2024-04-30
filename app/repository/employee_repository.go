@@ -15,7 +15,7 @@ func (repo *EmployeeRepository) CreateEmployee(employeeItem *model.Employee) err
 		VALUES	 ( $1, $2, $3, $4 );
 	`
 
-	_, err := repo.Exec(ctx, query, employeeItem.FirstName, employeeItem.LastName, employeeItem.Email, employeeItem.HireDate)
+	_, err := repo.Exec(query, employeeItem.FirstName, employeeItem.LastName, employeeItem.Email, employeeItem.HireDate)
 	if err != nil {
 		return err
 	}
@@ -42,10 +42,10 @@ func (repo *EmployeeRepository) GetEmployeeById(id int) (model.Employee, error) 
 
 	query := `SELECT * FROM employee WHERE id = $1;`
 
-	err := repo.QueryRow(&employeeItem, query, id)
+	err := repo.Get(&employeeItem, query, id)
 
 	if err != nil {
-		return nil, err
+		return employeeItem, err
 	}
 
 	return employeeItem, nil
@@ -70,9 +70,9 @@ func (repo *EmployeeRepository) UpdateEmployeeById(id int, employeeItem *model.E
 }
 
 func (repo *EmployeeRepository) DeleteEmployeeById(id int) error {
-	query := `DELETE employee WHERE id = $1;`
+	query := `DELETE FROM employee WHERE id = $1`
 
-	_, err := query.Exec(query, id)
+	_, err := repo.Exec(query, id)
 
 	if err != nil {
 		return err
