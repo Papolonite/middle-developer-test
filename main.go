@@ -2,7 +2,9 @@ package main
 
 import (
 	"log"
+	"middle-developer-test/pkg/config"
 	"middle-developer-test/pkg/routes"
+	"os"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
@@ -11,13 +13,15 @@ import (
 
 func main() {
 	// setting up fiber
+	config.LoadConfig(".env")
+
 	app := fiber.New()
 
 	app.Use(cors.New(), logger.New())
 
 	routes.AppRoutes(app)
 
-	err := app.Listen(":8000")
+	err := app.Listen(os.Getenv("SERVER_URL"))
 	if err != nil {
 		log.Printf("error during listening to port 8000. reason: %v", err)
 	}
