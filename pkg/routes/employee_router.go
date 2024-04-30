@@ -6,7 +6,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-func AppRoutes(a *fiber.App) {
+func EmployeeRoutes(a *fiber.App) {
 	route := a.Group("/api/employee")
 
 	route.Get("/", controller.GetAllEmployee)

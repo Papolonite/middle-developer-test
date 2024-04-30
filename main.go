@@ -19,7 +19,7 @@ func main() {
 
 	app.Use(cors.New(), logger.New())
 
-	routes.AppRoutes(app)
+	routes.EmployeeRoutes(app)
 
 	err := app.Listen(os.Getenv("SERVER_URL"))
 	if err != nil {
