@@ -5,7 +5,7 @@ import (
 	"regexp"
 )
 
-func validateEmail(email string) error {
+func ValidateEmail(email string) error {
 	emailRegex, err := regexp.Compile(`[^@ \t\r\n]+@[^@ \t\r\n]+\.[^@ \t\r\n]+`)
 
 	if err != nil {

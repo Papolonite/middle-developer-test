@@ -1,24 +1,24 @@
 package main
 
 import (
-	"context"
+	"log"
+	"middle-developer-test/pkg/routes"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/jackc/pgx/v5/pgxpool"
-	"github.com/rs/zerolog/log"
+	"github.com/gofiber/fiber/v2/middleware/cors"
+	"github.com/gofiber/fiber/v2/middleware/logger"
 )
 
 func main() {
-	ctx := context.Background()
-
-	// setting up pgx to database
-	pool, err := pgxpool.New(ctx, "postgresql://dev:dev@localhost:5102/postgres?sslmode=disable")
-
-	if err != nil {
-		log.Error().Err(err).Msg("Unable to connect do database")
-	}
-
 	// setting up fiber
 	app := fiber.New()
 
+	app.Use(cors.New(), logger.New())
+
+	routes.AppRoutes(app)
+
+	err := app.Listen(":8000")
+	if err != nil {
+		log.Printf("error during listening to port 8000. reason: %v", err)
+	}
 }
