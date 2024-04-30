@@ -111,14 +111,6 @@ func UpdateEmployeeById(c *fiber.Ctx) error {
 			})
 	}
 
-	db, err := database.PostgreSQLConection()
-	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).JSON(
-			fiber.Map{
-				"message": err.Error(),
-			})
-	}
-
 	if err := lib.ValidateEmail(employeeBody.Email); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(
 			fiber.Map{
@@ -135,7 +127,7 @@ func UpdateEmployeeById(c *fiber.Ctx) error {
 			})
 	}
 
-	db, err = database.PostgreSQLConection()
+	db, err := database.PostgreSQLConection()
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(
 			fiber.Map{
@@ -195,7 +187,7 @@ func DeleteEmployee(c *fiber.Ctx) error {
 			})
 	}
 
-	employee, err := db.GetEmployeeById(id)
+	_, err = db.GetEmployeeById(id)
 	if err != nil {
 		return c.Status(fiber.StatusNotFound).JSON(
 			fiber.Map{
@@ -213,6 +205,6 @@ func DeleteEmployee(c *fiber.Ctx) error {
 	}
 
 	return c.JSON(fiber.Map{
-		"message": "Successfully deleted employee data"
+		"message": "Successfully deleted employee data",
 	})
 }
