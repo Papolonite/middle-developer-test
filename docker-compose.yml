@@ -1,13 +1,60 @@
-# Use postgres/example user/password credentials
-version: '3.1'
-
 services:
+  api:
+    container_name: fiber-api
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      USE_SYSTEM_ENV : true
+      SERVER_URL : "${SERVER_URL}"
+      DB_URL : "postgresql://${DB_USERNAME}:${DB_NAME}@db:5432/${DB_PASSWORD}?sslmode=disable"
+    depends_on:
+      - migrate
+    ports:
+      - 8080:8080
+    networks:
+      - middle-developer-test
+
   db:
-    image: postgres
+    container_name: fiber-db-postgres
+    image: postgres:latest
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U dev -d postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
     restart: always
     environment:
-      POSTGRES_PASSWORD: dev
-      POSTGRES_DB: postgres
-      POSTGRES_USER : dev
+      POSTGRES_DB: "${DB_NAME}"
+      POSTGRES_USER : "${DB_USERNAME}"
+      POSTGRES_PASSWORD: "${DB_PASSWORD}"
     ports:
-      - 5102:5432
+      - 5432:5432
+    volumes:
+      - ./fiberdbdata:/var/lib/postgresql/data
+    networks:
+      - middle-developer-test
+
+  migrate:
+    container_name: fiber-db-migrate
+    image: migrate/migrate
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./platform/migrations:/database
+    command:
+      [
+        "-path",
+        "/database",
+        "-database",
+        "postgresql://${DB_USERNAME}:${DB_NAME}@db:5432/${DB_PASSWORD}?sslmode=disable", 
+        "up"
+      ]
+    networks:
+      - middle-developer-test
+
+networks:
+  middle-developer-test:
+    driver: bridge
+  

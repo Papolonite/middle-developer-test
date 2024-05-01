@@ -13,16 +13,19 @@ import (
 
 func main() {
 	// setting up fiber
-	config.LoadConfig(".env")
+	config.LoadConfig()
 
 	app := fiber.New()
 
 	app.Use(cors.New(), logger.New())
 
+	log.Print(os.Getenv("DB_URL"))
+	log.Print(os.Getenv("SERVER_URL"))
+
 	routes.EmployeeRoutes(app)
 
 	err := app.Listen(os.Getenv("SERVER_URL"))
 	if err != nil {
-		log.Printf("error during listening to port 8000. reason: %v", err)
+		log.Printf("error during listening to port. reason: %v", err)
 	}
 }
