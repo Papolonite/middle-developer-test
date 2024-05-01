@@ -111,13 +111,6 @@ func UpdateEmployeeById(c *fiber.Ctx) error {
 			})
 	}
 
-	if err := lib.ValidateEmail(employeeBody.Email); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(
-			fiber.Map{
-				"message": err.Error(),
-			})
-	}
-
 	// Check If Employee Exist
 	id, err := strconv.Atoi(c.Params("employeeId"))
 	if err != nil {
@@ -150,11 +143,20 @@ func UpdateEmployeeById(c *fiber.Ctx) error {
 	if employeeBody.LastName == "" {
 		employeeBody.LastName = employee.LastName
 	}
-	if employeeBody.Email == "" {
-		employeeBody.Email = employee.Email
-	}
 	if employeeBody.HireDate.IsZero() {
 		employeeBody.HireDate = employee.HireDate
+	}
+
+	// Email Validation
+	if employeeBody.Email == "" {
+		employeeBody.Email = employee.Email
+	} else {
+		if err := lib.ValidateEmail(employeeBody.Email); err != nil {
+			return c.Status(fiber.StatusBadRequest).JSON(
+				fiber.Map{
+					"message": err.Error(),
+				})
+		}
 	}
 
 	if err := db.UpdateEmployeeById(id, employeeBody); err != nil {

@@ -39,10 +39,10 @@ func TestEmployeeRoutes(t *testing.T) {
 			description: "create new employee",
 			route:       "/api/employee",
 			requestBody: strings.NewReader(`{
-				"firstName" : "Test",
-				"lastName" : "Employee",
+				"first_name" : "Test",
+				"last_name" : "Employee",
 				"email" : "testEmployee@gmail.com",
-				"hireDate" : "2024-04-23T00:00:00.000Z"
+				"hire_date" : "2024-04-23T00:00:00.000Z"
 		}`),
 			expectedStatusCode: 200,
 			expectedError:      false,
@@ -51,8 +51,8 @@ func TestEmployeeRoutes(t *testing.T) {
 			description: "create new employee with uncomplete body",
 			route:       "/api/employee",
 			requestBody: strings.NewReader(`{
-				"firstName" : "Test2",
-				"lastName" : "Employee",
+				"first_name" : "Test2",
+				"last_name" : "Employee",
 		}`),
 			expectedStatusCode: 400,
 			expectedError:      false,
@@ -61,10 +61,10 @@ func TestEmployeeRoutes(t *testing.T) {
 			description: "create new employee with wrong email format",
 			route:       "/api/employee",
 			requestBody: strings.NewReader(`{
-				"firstName" : "Test3",
-				"lastName" : "Employee",
+				"first_name" : "Test3",
+				"last_name" : "Employee",
 				"email" : "testEmployee",
-				"hireDate" : "2024-04-23T00:00:00.000Z"
+				"hire_date" : "2024-04-23T00:00:00.000Z"
 		}`),
 			expectedStatusCode: 400,
 			expectedError:      false,
@@ -178,8 +178,8 @@ func TestEmployeeRoutes(t *testing.T) {
 			description: "update employee",
 			route:       "/api/employee/" + strconv.Itoa(firstItemId),
 			requestBody: strings.NewReader(`{
-				"firstName" : "TestUpdated",
-				"lastName" : "EmployeeUpdated"
+				"first_name" : "TestUpdated",
+				"last_name" : "EmployeeUpdated"
 		}`),
 			expectedStatusCode: 200,
 			expectedError:      false,
@@ -188,8 +188,8 @@ func TestEmployeeRoutes(t *testing.T) {
 			description: "update non existent employee",
 			route:       "/api/employee/" + strconv.Itoa(firstItemId+len(getAllEmployeeResponse.Data)),
 			requestBody: strings.NewReader(`{
-				"firstName" : "TestUpdated",
-				"lastName" : "EmployeeUpdated"
+				"first_name" : "TestUpdated",
+				"last_name" : "EmployeeUpdated"
 		}`),
 			expectedStatusCode: 404,
 			expectedError:      false,

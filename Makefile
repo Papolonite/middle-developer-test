@@ -1,5 +1,5 @@
-MIGRATION_PATH = $(PWD)/platform/migrations
-DATABASE_URL = postgresql://dev:dev@localhost:5102/postgres?sslmode=disable
+MIGRATION_PATH = platform/migrations/
+DATABASE_URL = postgresql://dev:dev@localhost:5103/postgres?sslmode=disable
 
 migrate.up: 
 	migrate -path ${MIGRATION_PATH} -database "${DATABASE_URL}" -verbose up
