@@ -23,6 +23,6 @@ docker.stop :
 	docker compose stop
 	docker compose down
 
-docker.test.up:
+docker.test:
 	docker-compose -f docker-compose.test.yml up --build api --abort-on-container-exit
 	docker compose -f docker-compose.test.yml down
