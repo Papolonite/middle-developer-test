@@ -34,8 +34,17 @@ func CreateEmployee(c *fiber.Ctx) error {
 			})
 	}
 
-	if err := db.CreateEmployee(employeeBody); err != nil {
+	id, err := db.CreateEmployee(employeeBody)
+	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(
+			fiber.Map{
+				"message": err.Error(),
+			})
+	}
+
+	createdEmployee, err := db.GetEmployeeById(id)
+	if err != nil {
+		return c.Status(fiber.StatusNotFound).JSON(
 			fiber.Map{
 				"message": err.Error(),
 			})
@@ -43,6 +52,7 @@ func CreateEmployee(c *fiber.Ctx) error {
 
 	return c.JSON(fiber.Map{
 		"message": "Successfully created new employee",
+		"data":    createdEmployee,
 	})
 }
 
@@ -166,8 +176,17 @@ func UpdateEmployeeById(c *fiber.Ctx) error {
 			})
 	}
 
+	updatedEmployee, err := db.GetEmployeeById(id)
+	if err != nil {
+		return c.Status(fiber.StatusNotFound).JSON(
+			fiber.Map{
+				"message": err.Error(),
+			})
+	}
+
 	return c.JSON(fiber.Map{
 		"message": "Successfully updated employee data",
+		"data":    updatedEmployee,
 	})
 }
 
@@ -189,7 +208,7 @@ func DeleteEmployee(c *fiber.Ctx) error {
 			})
 	}
 
-	_, err = db.GetEmployeeById(id)
+	deletedEmployee, err := db.GetEmployeeById(id)
 	if err != nil {
 		return c.Status(fiber.StatusNotFound).JSON(
 			fiber.Map{
@@ -208,5 +227,6 @@ func DeleteEmployee(c *fiber.Ctx) error {
 
 	return c.JSON(fiber.Map{
 		"message": "Successfully deleted employee data",
+		"data":    deletedEmployee,
 	})
 }

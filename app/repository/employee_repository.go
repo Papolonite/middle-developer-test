@@ -10,17 +10,18 @@ type EmployeeRepository struct {
 	*sqlx.DB
 }
 
-func (repo *EmployeeRepository) CreateEmployee(employeeItem *model.Employee) error {
+func (repo *EmployeeRepository) CreateEmployee(employeeItem *model.Employee) (int, error) {
 	query := `INSERT INTO employee (first_name, last_name, email, hire_date)
-		VALUES	 ( $1, $2, $3, $4 );
+		VALUES	 ( $1, $2, $3, $4 ) RETURNING id;
 	`
 
-	_, err := repo.Exec(query, employeeItem.FirstName, employeeItem.LastName, employeeItem.Email, employeeItem.HireDate)
+	var id int
+	err := repo.QueryRow(query, employeeItem.FirstName, employeeItem.LastName, employeeItem.Email, employeeItem.HireDate).Scan(&id)
 	if err != nil {
-		return err
+		return -1, err
 	}
 
-	return nil
+	return id, nil
 }
 
 func (repo *EmployeeRepository) GetAllEmployee() ([]model.Employee, error) {
