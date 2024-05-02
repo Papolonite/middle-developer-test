@@ -13,7 +13,7 @@ import (
 
 func main() {
 	// setting up fiber
-	config.LoadConfig()
+	config.LoadConfig(".env.local")
 
 	app := fiber.New()
 

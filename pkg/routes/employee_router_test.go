@@ -253,11 +253,10 @@ func TestEmployeeRoutes(t *testing.T) {
 
 		assert.Equalf(t, test.expectedStatusCode, resp.StatusCode, test.description)
 	}
-
 }
 
 func setUpTest() {
-	config.LoadConfig("../../.env.test")
+	config.LoadConfig("../../.env.local.test")
 }
 
 func TearDownTest() {
