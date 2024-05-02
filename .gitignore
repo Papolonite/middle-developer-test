@@ -23,7 +23,7 @@ go.work
 # Environment Variables
 .env
 .env.local
-.env.test
+.env.local.test
 
 # DB Volumes
 fiberdbdata/

@@ -256,7 +256,7 @@ func TestEmployeeRoutes(t *testing.T) {
 }
 
 func setUpTest() {
-	config.LoadConfig("../../.env.test")
+	config.LoadConfig("../../.env.local.test")
 }
 
 func TearDownTest() {
