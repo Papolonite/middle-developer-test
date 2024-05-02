@@ -1,0 +1,47 @@
+services:
+  api:
+    container_name: fiber-api-test
+    build:
+      context: .
+      dockerfile: Dockerfile.test
+    environment:
+      USE_SYSTEM_ENV : true
+      SERVER_URL : "${SERVER_URL}"
+      DB_URL : "postgresql://${TEST_DB_USERNAME}:${TEST_DB_PASSWORD}@db:5432/${TEST_DB_NAME}?sslmode=disable"
+    depends_on:
+      - migrate
+    ports:
+      - 8080:8080
+
+  db:
+    container_name: fiber-db-postgres-test
+    image: postgres:latest
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U dev -d postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: always
+    environment:
+      POSTGRES_DB: "${TEST_DB_NAME}"
+      POSTGRES_USER : "${TEST_DB_USERNAME}"
+      POSTGRES_PASSWORD: "${TEST_DB_PASSWORD}"
+    ports:
+      - 5432:5432
+
+  migrate:
+    container_name: fiber-db-migrate-test
+    image: migrate/migrate
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./platform/migrations:/database
+    command:
+      [
+        "-path",
+        "/database",
+        "-database",
+        "postgresql://${TEST_DB_USERNAME}:${TEST_DB_PASSWORD}@db:5432/${TEST_DB_NAME}?sslmode=disable", 
+        "up"
+      ]

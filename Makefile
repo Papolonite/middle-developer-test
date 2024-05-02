@@ -17,9 +17,12 @@ app.run:
 	go run main.go
 
 docker.run:
-	docker compose build
-	docker compose up
+	docker compose up --build
 
 docker.stop :
 	docker compose stop
 	docker compose down
+
+docker.test.up:
+	docker-compose -f docker-compose.test.yml up --build api --abort-on-container-exit
+	docker compose -f docker-compose.test.yml down
